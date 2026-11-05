@@ -1,4 +1,3 @@
-# Datos iniciales de ExploraGuajira
 # Primera version: informacion de ejemplo almacenada en una lista.
 
 sitios_turisticos = [
