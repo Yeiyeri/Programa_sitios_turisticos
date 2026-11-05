@@ -6,8 +6,8 @@ sitios_turisticos = [
         "tipo": "Natural",
         "ubicacion": "Uribia, La Guajira",
         "descripcion": "Destino turistico conocido por sus paisajes deserticos, playas y cultura Wayuu.",
-        "latitud": "12°11'44.5"N"",
-        "longitud": " 72°08'49.1"W"
+        "latitud": "12°11'44.5\"N",
+        "longitud": " 72°08'49.1\"W"
     },
     {
         "nombre": "Punta Gallinas",
