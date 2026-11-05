@@ -1,4 +1,3 @@
-# Datos iniciales de ExploraGuajira
 # Primera version: informacion de ejemplo almacenada en una lista.
 
 sitios_turisticos = [
@@ -6,7 +5,9 @@ sitios_turisticos = [
         "nombre": "Cabo de la Vela",
         "tipo": "Natural",
         "ubicacion": "Uribia, La Guajira",
-        "descripcion": "Destino turistico conocido por sus paisajes deserticos, playas y cultura Wayuu."
+        "descripcion": "Destino turistico conocido por sus paisajes deserticos, playas y cultura Wayuu.",
+        "latitud": "12°11'44.5"N"",
+        "longitud": " 72°08'49.1"W"
     },
     {
         "nombre": "Punta Gallinas",
