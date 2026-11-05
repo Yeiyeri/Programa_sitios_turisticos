@@ -26,6 +26,9 @@ def mostrar_detalles():
             print(f"Tipo: {sitio['tipo']}")
             print(f"Ubicacion: {sitio['ubicacion']}")
             print(f"Descripcion: {sitio['descripcion']}")
+            enlace = f"https://www.google.com/maps?q={sitio['latitud']},{sitio['longitud']}"
+            print(f"Google Maps: {enlace}")
+
             print("========================================")
         else:
             print("Opcion no valida. Selecciona un numero de la lista.")
