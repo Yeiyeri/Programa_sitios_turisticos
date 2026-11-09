@@ -102,3 +102,4 @@ def menu():
 if __name__ == "__main__":
     #verificar_imagenes()
     menu()
+    
