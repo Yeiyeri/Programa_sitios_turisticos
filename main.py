@@ -1,17 +1,18 @@
 # Primera version: consulta de sitios turisticos desde consola.
 import os
+from PIL import Image
 from sitios_turisticos import sitios_turisticos
 
-def verificar_imagenes():
+#def verificar_imagenes():
     #print("Carpeta actual:", os.getcwd())
 
-    for sitio in sitios_turisticos:
-        ruta = sitio["imagen"]
+    #for sitio in sitios_turisticos:
+        #ruta = sitio["imagen"]
         #print("Buscando:", os.path.abspath(ruta))
-        if os.path.exists(ruta):
-            print(f"Imagen encontrada: {sitio["nombre"]}")
-        else:
-            print(f"Imagen no encontrada: {sitio['nombre']}")
+        #if os.path.exists(ruta):
+            #print(f"Imagen encontrada: {sitio["nombre"]}")
+        #else:
+            #print(f"Imagen no encontrada: {sitio['nombre']}")
 
 def mostrar_sitios():
     print("\n========== SITIOS TURISTICOS ==========")
@@ -35,6 +36,8 @@ def mostrar_detalles():
             print(f"Tipo: {sitio['tipo']}")
             print(f"Ubicacion: {sitio['ubicacion']}")
             print(f"Descripcion: {sitio['descripcion']}")
+            imagen = Image.open(sitio["imagen"])
+            imagen.show()
             enlace = f"https://www.google.com/maps?q={sitio['latitud']},{sitio['longitud']}"
             print(f"Google Maps: {enlace}")
             print("========================================")
@@ -97,6 +100,5 @@ def menu():
 
 
 if __name__ == "__main__":
-    verificar_imagenes()
+    #verificar_imagenes()
     menu()
-    
