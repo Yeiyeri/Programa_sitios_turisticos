@@ -1,0 +1,186 @@
+/* Configuración general */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f7f4;
+}
+
+/* Barra de navegación */
+header {
+    background-color: #1e945f;
+    padding: 15px 30px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav h1 {
+    color: white;
+    margin: 0;
+}
+
+/* Lista de enlaces */
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Efecto al pasar el cursor */
+nav a:hover {
+    color: #f5d76e;
+}
+
+/* Contenido principal */
+main {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+main h2 {
+    color: #176b45;
+    font-size: 32px;
+}
+
+/* Portada principal */
+.presentacion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 50px;
+}
+
+.presentacion-texto {
+    flex: 1;
+}
+
+.presentacion-texto h2 {
+    font-size: 40px;
+    color: #176b45;
+}
+
+.presentacion-texto p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.presentacion-imagen {
+    flex: 1;
+}
+
+.presentacion-imagen img {
+    width: 100%;
+    border-radius: 15px;
+}
+/* Sección de destinos */
+.destinos {
+    padding: 40px 50px;
+    text-align: center;
+}
+
+.destinos h2 {
+    color: #176b45;
+    font-size: 32px;
+}
+
+.destinos-intro {
+    color: #555;
+    font-size: 17px;
+    margin-bottom: 35px;
+}
+
+/* Contenedor de tarjetas */
+.contenedor-destinos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+/* Tarjetas individuales */
+.tarjeta-destino {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    text-align: left;
+    padding-bottom: 15px;
+    transition: transform 0.3s;
+}
+
+/* Fotografías */
+.tarjeta-destino img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Títulos */
+.tarjeta-destino h3 {
+    color: #176b45;
+    padding: 0 15px;
+}
+
+/* Descripciones */
+.tarjeta-destino p {
+    color: #555;
+    padding: 0 15px;
+    line-height: 1.5;
+}
+
+/* Efecto al pasar el cursor */
+.tarjeta-destino:hover {
+    transform: translateY(-5px);
+}
+
+/* Adaptación para pantallas pequeñas */
+@media (max-width: 768px) {
+    .contenedor-destinos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .presentacion {
+        flex-direction: column;
+        padding: 25px;
+    }
+}
+
+/* Adaptación para celulares */
+@media (max-width: 500px) {
+    .contenedor-destinos {
+        grid-template-columns: 1fr;
+    }
+
+    .destinos {
+        padding: 25px 15px;
+    }
+}
+
+/* Botones de ubicación */
+.boton-mapa {
+    display: inline-block;
+    background-color: #176b45;
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    margin: 5px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.boton-mapa:hover {
+    background-color: #104b30;
+}
