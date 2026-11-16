@@ -137,7 +137,52 @@
     </div>
 </section>
     </section>
+<section class="mapas" id="mapas">
+    <h2>Explora nuestros destinos en el mapa</h2>
+
+    <p>
+        Selecciona un destino para consultar su ubicación.
+    </p>
+
+    <div class="selector-destino">
+        <select id="destino-mapa">
+            <option value="Cabo de la Vela, La Guajira">
+                Cabo de la Vela
+            </option>
+
+            <option value="Punta Gallinas, La Guajira">
+                Punta Gallinas
+            </option>
+
+            <option value="Santuario de Fauna y Flora Los Flamencos, Riohacha">
+                Santuario de Los Flamencos
+            </option>
+
+            <option value="Salinas de Manaure, La Guajira">
+                Salinas de Manaure
+            </option>
+
+            <option value="Centro Histórico de Cartagena, Colombia">
+                Centro Histórico de Cartagena
+            </option>
+        </select>
+    </div>
+
+    <div class="contenedor-mapa">
+        <iframe
+            id="mapa-google"
+            src="https://www.google.com/maps?q=Cabo+de+la+Vela,+La+Guajira&output=embed"
+            width="100%"
+            height="450"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</section>
 </main>
+<script src="script.js"></script>
 </body>
 
 </html>
