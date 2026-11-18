@@ -12,6 +12,8 @@ WEB_DIR = os.path.join(BASE_DIR, "Web")
 IMAGE_DIR = os.path.join(BASE_DIR, "Imagenes")
 
 app = Flask(__name__, static_folder=WEB_DIR, static_url_path="")
+# Limita el tamaño del cuerpo de las solicitudes al endpoint del chat.
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5.5")
 
@@ -82,7 +84,7 @@ def extraer_fuentes(respuesta):
             for fuente in elemento.get("action", {}).get("sources", []):
                 url = fuente.get("url")
                 titulo = fuente.get("title") or url
-                if url and url not in vistas:
+                if isinstance(url, str) and url.startswith(("https://", "http://")) and url not in vistas:
                     vistas.add(url)
                     fuentes.append({"title": titulo, "url": url})
 
@@ -206,4 +208,4 @@ Responde en español, con lenguaje claro y una extensión moderada.
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
