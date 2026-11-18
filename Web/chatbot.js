@@ -36,6 +36,12 @@ function agregarFuentesChat(contenedor, fuentes) {
     const lista = document.createElement("ul");
     fuentes.forEach((fuente) => {
         const item = document.createElement("li");
+        // Solo se permiten enlaces web; evita protocolos no seguros.
+        if (typeof fuente.url !== "string" ||
+            !/^https?:\/\//i.test(fuente.url)) {
+            return;
+        }
+
         const enlace = document.createElement("a");
         enlace.href = fuente.url;
         enlace.textContent = fuente.title || fuente.url;
