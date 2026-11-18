@@ -91,7 +91,9 @@ main h2 {
     text-align: center;
 }
 
-.destinos h2 {
+.destinos h2,
+.mapas h2,
+.clima h2 {
     color: #176b45;
     font-size: 32px;
 }
@@ -168,6 +170,24 @@ main h2 {
     }
 }
 
+@media (max-width: 500px) {
+    .mapas {
+        padding: 30px 15px;
+    }
+
+    .contenedor-mapa iframe {
+        height: 350px;
+    }
+
+    .clima {
+        padding: 30px 15px;
+    }
+
+    .clima-dias {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /* Botones de ubicación */
 .boton-mapa {
     display: inline-block;
@@ -190,11 +210,6 @@ main h2 {
     text-align: center;
 }
 
-.mapas h2 {
-    color: #176b45;
-    font-size: 32px;
-}
-
 .mapas p {
     color: #555;
     font-size: 17px;
@@ -215,15 +230,7 @@ main h2 {
     border: none;
 }
 
-@media (max-width: 500px) {
-    .mapas {
-        padding: 30px 15px;
-    }
 
-    .contenedor-mapa iframe {
-        height: 350px;
-    }
-}
 
 /* Selector de destinos */
 .selector-destino {
@@ -247,3 +254,144 @@ main h2 {
     border-color: #104b30;
     box-shadow: 0 0 5px rgba(23, 107, 69, 0.3);
 }
+
+
+/* Sección de clima */
+.clima {
+    padding: 50px;
+    text-align: center;
+}
+
+.clima h2 {
+    color: #176b45;
+    font-size: 32px;
+}
+
+.clima-intro {
+    color: #555;
+    font-size: 17px;
+    margin-bottom: 25px;
+}
+
+.clima-estado {
+    color: #555;
+    min-height: 22px;
+}
+
+.clima-estado.error {
+    color: #a12a1b;
+    font-weight: bold;
+}
+
+.clima-hoy {
+    max-width: 1100px;
+    margin: 0 auto 30px;
+    padding: 25px 30px;
+    background-color: #1e945f;
+    color: white;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.clima-hoy[hidden] {
+    display: none;
+}
+
+.clima-icono {
+    font-size: 48px;
+}
+
+.clima-temp {
+    font-size: 64px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.clima-cond {
+    font-size: 20px;
+    margin-top: 6px;
+}
+
+.clima-detalles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-size: 17px;
+}
+
+.clima-detalles li {
+    margin: 8px 0;
+}
+
+.clima-subtitulo {
+    color: #176b45;
+    font-size: 22px;
+}
+
+.clima-dias {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.clima-dia {
+    background-color: white;
+    border-radius: 12px;
+    padding: 15px 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.clima-dia-nombre {
+    font-weight: bold;
+    color: #176b45;
+}
+
+.clima-dia-icono {
+    font-size: 32px;
+    margin: 8px 0;
+}
+
+.clima-dia-cond {
+    color: #555;
+    font-size: 14px;
+    min-height: 34px;
+}
+
+.clima-dia-temps {
+    margin-top: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.clima-dia-temps span {
+    color: #777;
+    font-weight: normal;
+}
+
+.clima-dia-lluvia {
+    color: #555;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.clima-fuente {
+    color: #777;
+    font-size: 14px;
+    margin-top: 25px;
+}
+
+@media (max-width: 768px) {
+    .clima-dias {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+

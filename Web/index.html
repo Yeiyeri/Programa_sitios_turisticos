@@ -146,23 +146,28 @@
 
     <div class="selector-destino">
         <select id="destino-mapa">
-            <option value="Cabo de la Vela, La Guajira">
+            <option value="Cabo de la Vela, La Guajira"
+                    data-lat="12.195810783645866" data-lon="-72.14721863564708" data-nombre="Cabo de la Vela">
                 Cabo de la Vela
             </option>
 
-            <option value="Punta Gallinas, La Guajira">
+            <option value="Punta Gallinas, La Guajira"
+                    data-lat="12.45832211845142" data-lon="-71.66616741055893" data-nombre="Punta Gallinas">
                 Punta Gallinas
             </option>
 
-            <option value="Santuario de Fauna y Flora Los Flamencos, Riohacha">
+            <option value="Santuario de Fauna y Flora Los Flamencos, Riohacha"
+                    data-lat="11.371272479984055" data-lon="-73.12104781356018" data-nombre="Santuario de Los Flamencos">
                 Santuario de Los Flamencos
             </option>
 
-            <option value="Salinas de Manaure, La Guajira">
+            <option value="Salinas de Manaure, La Guajira"
+                    data-lat="11.763161389154261" data-lon="-72.51912472050132" data-nombre="Salinas de Manaure">
                 Salinas de Manaure
             </option>
 
-            <option value="Centro Histórico de Cartagena, Colombia">
+            <option value="Centro Histórico de Cartagena, Colombia"
+                    data-lat="10.424679969044202" data-lon="-75.55196698756905" data-nombre="Centro Histórico de Cartagena">
                 Centro Histórico de Cartagena
             </option>
         </select>
@@ -180,6 +185,35 @@
             referrerpolicy="no-referrer-when-downgrade">
         </iframe>
     </div>
+</section>
+
+<section class="clima" id="clima">
+    <h2>Clima del destino</h2>
+
+    <p class="clima-intro" id="clima-destino">
+        Selecciona un destino en el mapa para ver su clima.
+    </p>
+
+    <p class="clima-estado" id="clima-estado" role="status" aria-live="polite"></p>
+
+    <div class="clima-hoy" id="clima-hoy" hidden>
+        <div class="clima-principal">
+            <div class="clima-icono" id="clima-icono"></div>
+            <div class="clima-temp" id="clima-temp"></div>
+            <div class="clima-cond" id="clima-cond"></div>
+        </div>
+
+        <ul class="clima-detalles">
+            <li>Sensación térmica: <strong id="clima-sens"></strong></li>
+            <li>Humedad: <strong id="clima-hum"></strong></li>
+            <li>Viento: <strong id="clima-viento"></strong></li>
+        </ul>
+    </div>
+
+    <h3 class="clima-subtitulo" id="clima-subtitulo" hidden>Próximos días</h3>
+    <div class="clima-dias" id="clima-dias"></div>
+
+    <p class="clima-fuente">Datos: Open-Meteo. Hora de Colombia.</p>
 </section>
 </main>
 <script src="script.js"></script>
