@@ -85,9 +85,19 @@ def detectar_destinos(pregunta):
 
 
 def pregunta_dentro_del_tema(pregunta):
-    """Evita enviar al modelo preguntas ajenas aunque mencionen un destino."""
+    """Evita enviar al modelo preguntas ajenas aunque mencionen un destino.
+
+    Se usan límites de palabra para no aceptar coincidencias accidentales,
+    como 'diferencia' dentro de 'diferencial'.
+    """
     texto = normalizar(pregunta)
-    return any(termino in texto for termino in TEMAS_PERMITIDOS)
+    return any(
+        re.search(
+            r"(?<![a-z0-9])" + re.escape(termino) + r"(?![a-z0-9])",
+            texto
+        )
+        for termino in TEMAS_PERMITIDOS
+    )
 
 
 def solicita_fuentes(pregunta):
