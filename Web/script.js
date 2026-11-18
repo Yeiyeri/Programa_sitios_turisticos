@@ -58,8 +58,6 @@ async function cargarClima(opcion) {
     porId("clima-destino").textContent = "Clima en " + nombre;
     porId("clima-hoy").hidden = true;
     porId("clima-subtitulo").hidden = true;
-    porId("clima-dias").replaceChildren();
-
     const url = "https://api.open-meteo.com/v1/forecast"
         + "?latitude=" + opcion.dataset.lat
         + "&longitude=" + opcion.dataset.lon
@@ -84,6 +82,11 @@ async function cargarClima(opcion) {
         mostrarClimaDias(datos.daily, datos.hourly);
         estado.textContent = "";
     } catch (error) {
+        // Ignora errores de solicitudes de destinos que ya no están seleccionados
+        if (selector.selectedOptions[0] !== opcion) {
+            return;
+        }
+
         estado.className = "clima-estado error";
         estado.textContent = "No se pudo cargar el clima. Revisa tu conexión e intenta de nuevo.";
         console.error(error);
@@ -115,24 +118,33 @@ function crearTexto(etiqueta, clase, texto) {
 function resumenDelDia(horario, fecha) {
     const conteo = {};
     let sumaLluvia = 0;
-    let horas = 0;
+    let cantidadLluvia = 0;
 
     for (let i = 0; i < horario.time.length; i++) {
         if (!horario.time[i].startsWith(fecha)) {
             continue;
         }
+
         const hora = Number(horario.time[i].slice(11, 13));
         if (hora < 6 || hora > 20) {
             continue;
         }
-        const codigo = horario.weather_code[i];
-        conteo[codigo] = (conteo[codigo] || 0) + 1;
-        sumaLluvia += horario.precipitation_probability[i] ?? 0;
-        horas++;
+
+        const codigo = horario.weather_code?.[i];
+        if (codigo !== null && codigo !== undefined) {
+            conteo[codigo] = (conteo[codigo] || 0) + 1;
+        }
+
+        const probabilidad = horario.precipitation_probability?.[i];
+        if (typeof probabilidad === "number" && Number.isFinite(probabilidad)) {
+            sumaLluvia += probabilidad;
+            cantidadLluvia++;
+        }
     }
 
-    let codigoFrecuente = 0;
-    let maximo = -1;
+    let codigoFrecuente = null;
+    let maximo = 0;
+
     for (const codigo of Object.keys(conteo).map(Number).sort((a, b) => a - b)) {
         if (conteo[codigo] > maximo) {
             maximo = conteo[codigo];
@@ -142,7 +154,9 @@ function resumenDelDia(horario, fecha) {
 
     return {
         codigo: codigoFrecuente,
-        lluvia: horas ? Math.round(sumaLluvia / horas) : 0
+        lluvia: cantidadLluvia
+            ? Math.round(sumaLluvia / cantidadLluvia)
+            : null
     };
 }
 
@@ -155,7 +169,7 @@ function mostrarClimaDias(diario, horario) {
         const fecha = new Date(diario.time[i] + "T00:00:00");
         const resumen = resumenDelDia(horario, diario.time[i]);
         const [texto, icono] = infoClima(resumen.codigo);
-        const lluvia = resumen.lluvia;
+        const lluvia = resumen.lluvia === null ? "Sin datos" : resumen.lluvia + "%";
 
         const tarjeta = document.createElement("article");
         tarjeta.className = "clima-dia";
@@ -168,7 +182,7 @@ function mostrarClimaDias(diario, horario) {
             crearTexto("div", "clima-dia-icono", icono),
             crearTexto("div", "clima-dia-cond", texto),
             temps,
-            crearTexto("div", "clima-dia-lluvia", "Lluvia: " + lluvia + "%")
+            crearTexto("div", "clima-dia-lluvia", "Lluvia: " + lluvia)
         );
         contenedor.appendChild(tarjeta);
     }
