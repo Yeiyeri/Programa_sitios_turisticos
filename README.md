@@ -28,7 +28,7 @@ El objetivo es ofrecer una forma sencilla y visual de conocer lugares de interé
 - Permitir seleccionar un destino en una lista desplegable y actualizar el mapa sin salir de la página.
 - Adaptar la distribución de las tarjetas y algunos elementos a pantallas más pequeñas mediante reglas CSS `@media`.
 
-La consulta del clima todavía no está implementada. Los enlaces de navegación «Clima» y «Acerca de» están presentes en la barra, pero sus secciones aún están pendientes de desarrollo.
+La consulta del clima ya está implementada mediante Open-Meteo. La sección «Acerca de» y algunos contenidos informativos adicionales siguen pendientes de desarrollo.
 
 ## 3. Estructura del proyecto
 
@@ -169,7 +169,7 @@ Esta solución permite mostrar un mapa dentro de la página sin implementar toda
 - Las fotografías en la carpeta `Imagenes/`, con los nombres que aparecen en las rutas del HTML.
 - Conexión a Internet para cargar Google Maps.
 
-No se necesita instalar un paquete de Python para abrir la versión web actual.
+Para abrir únicamente los archivos estáticos no se necesita instalar un paquete de Python. Para utilizar el servidor del chatbot, sí se deben instalar las dependencias indicadas en `requirements.txt`.
 
 ### Para la versión de consola
 
