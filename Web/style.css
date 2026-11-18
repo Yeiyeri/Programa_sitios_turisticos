@@ -91,11 +91,8 @@ main h2 {
     text-align: center;
 }
 
-.destinos h2 {
-    color: #176b45;
-    font-size: 32px;
-}
-
+.destinos h2,
+.mapas h2,
 .destinos-intro {
     color: #555;
     font-size: 17px;
@@ -168,6 +165,24 @@ main h2 {
     }
 }
 
+@media (max-width: 500px) {
+    .mapas {
+        padding: 30px 15px;
+    }
+
+    .contenedor-mapa iframe {
+        height: 350px;
+    }
+
+    .clima {
+        padding: 30px 15px;
+    }
+
+    .clima-dias {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /* Botones de ubicación */
 .boton-mapa {
     display: inline-block;
@@ -190,11 +205,6 @@ main h2 {
     text-align: center;
 }
 
-.mapas h2 {
-    color: #176b45;
-    font-size: 32px;
-}
-
 .mapas p {
     color: #555;
     font-size: 17px;
@@ -215,15 +225,7 @@ main h2 {
     border: none;
 }
 
-@media (max-width: 500px) {
-    .mapas {
-        padding: 30px 15px;
-    }
 
-    .contenedor-mapa iframe {
-        height: 350px;
-    }
-}
 
 /* Selector de destinos */
 .selector-destino {
@@ -387,12 +389,4 @@ main h2 {
     }
 }
 
-@media (max-width: 500px) {
-    .clima {
-        padding: 30px 15px;
-    }
 
-    .clima-dias {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
