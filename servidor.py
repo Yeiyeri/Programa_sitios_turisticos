@@ -1,5 +1,10 @@
 import os
 import re
+import threading
+import time
+import unicodedata
+from collections import defaultdict, deque
+from urllib.parse import urlparse
 
 from flask import Flask, jsonify, request, send_from_directory
 from dotenv import load_dotenv
@@ -12,19 +17,13 @@ WEB_DIR = os.path.join(BASE_DIR, "Web")
 IMAGE_DIR = os.path.join(BASE_DIR, "Imagenes")
 
 app = Flask(__name__, static_folder=WEB_DIR, static_url_path="")
-# Limita el tamaño del cuerpo de las solicitudes al endpoint del chat.
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5.5")
 
-# Nombres y alias admitidos. La pregunta debe mencionar al menos uno.
 DESTINOS = {
-    "Cabo de la Vela": [
-        "cabo de la vela", "el cabo de la vela"
-    ],
-    "Punta Gallinas": [
-        "punta gallinas", "punta gallina"
-    ],
+    "Cabo de la Vela": ["cabo de la vela", "el cabo de la vela"],
+    "Punta Gallinas": ["punta gallinas", "punta gallina"],
     "Santuario de Fauna y Flora Los Flamencos": [
         "santuario de fauna y flora los flamencos",
         "santuario los flamencos", "los flamencos", "flamencos"
@@ -33,16 +32,39 @@ DESTINOS = {
         "salinas de manaure", "salina de manaure", "manaure"
     ],
     "Centro Histórico de Cartagena": [
-        "centro historico de cartagena", "centro histórico de cartagena",
-        "centro de cartagena", "cartagena"
+        "centro historico de cartagena", "centro de cartagena", "cartagena"
     ],
 }
 
+# Términos que indican una consulta turística, geográfica, histórica,
+# cultural, ambiental o económica sobre los destinos registrados.
+TEMAS_PERMITIDOS = (
+    "historia", "historico", "cultura", "cultural", "wayuu", "indigena",
+    "tradicion", "tradiciones", "fauna", "flora", "animal", "animales",
+    "ave", "aves", "flamenco", "ecosistema", "biodiversidad", "naturaleza",
+    "ambiente", "ambiental", "conservacion", "economia", "economico",
+    "importancia", "turismo", "turistico", "turistica", "visitar", "visita",
+    "viajar", "viaje", "actividad", "actividades", "atractivo", "atractivos",
+    "paisaje", "playa", "playas", "mar", "desierto", "sal", "salina",
+    "ubicacion", "donde queda", "como llegar", "hospedaje", "alojamiento",
+    "gastronomia", "comida", "clima", "geografia", "geografico",
+    "comparar", "comparacion", "diferencia", "diferencias", "recomendacion",
+    "recomendar", "que es", "quien", "cuando", "cuentame", "hablame",
+    "informacion", "informar", "conocer", "explorar", "recorrido", "ruta",
+    "seguridad para turistas", "horario", "entrada", "precio", "costo",
+)
+
+# Límite sencillo por dirección IP: 12 solicitudes por minuto.
+# Para despliegues con varios procesos/servidores debe sustituirse por un
+# limitador compartido (por ejemplo Redis); este contador vive en memoria.
+RATE_LIMIT_REQUESTS = 12
+RATE_LIMIT_WINDOW_SECONDS = 60
+_solicitudes_por_ip = defaultdict(deque)
+_rate_limit_lock = threading.Lock()
+
 
 def normalizar(texto):
-    """Pasa el texto a minúsculas y elimina tildes para comparar alias."""
-    import unicodedata
-
+    """Convierte a minúsculas y elimina tildes."""
     texto = unicodedata.normalize("NFD", texto.lower())
     return "".join(
         caracter for caracter in texto
@@ -53,12 +75,19 @@ def normalizar(texto):
 def detectar_destinos(pregunta):
     texto = normalizar(pregunta)
     encontrados = []
-
     for destino, alias in DESTINOS.items():
-        if any(normalizar(nombre) in texto for nombre in alias):
-            encontrados.append(destino)
-
+        for nombre in alias:
+            patron = r"(?<![a-z0-9])" + re.escape(normalizar(nombre)) + r"(?![a-z0-9])"
+            if re.search(patron, texto):
+                encontrados.append(destino)
+                break
     return encontrados
+
+
+def pregunta_dentro_del_tema(pregunta):
+    """Evita enviar al modelo preguntas ajenas aunque mencionen un destino."""
+    texto = normalizar(pregunta)
+    return any(termino in texto for termino in TEMAS_PERMITIDOS)
 
 
 def solicita_fuentes(pregunta):
@@ -72,34 +101,56 @@ def solicita_fuentes(pregunta):
     return any(expresion in texto for expresion in expresiones)
 
 
+def url_web_valida(url):
+    """Acepta únicamente enlaces web HTTP o HTTPS con host."""
+    if not isinstance(url, str):
+        return False
+    try:
+        parsed = urlparse(url)
+        return parsed.scheme in ("http", "https") and bool(parsed.netloc)
+    except ValueError:
+        return False
+
+
 def extraer_fuentes(respuesta):
-    """Obtiene las citas web incluidas en las anotaciones de Responses API."""
+    """Obtiene fuentes web y valida las URL antes de devolverlas."""
     datos = respuesta.model_dump()
     fuentes = []
     vistas = set()
 
     for elemento in datos.get("output", []):
-        # Lista completa de páginas recuperadas por la herramienta web.
         if elemento.get("type") == "web_search_call":
             for fuente in elemento.get("action", {}).get("sources", []):
                 url = fuente.get("url")
                 titulo = fuente.get("title") or url
-                if isinstance(url, str) and url.startswith(("https://", "http://")) and url not in vistas:
+                if url_web_valida(url) and url not in vistas:
                     vistas.add(url)
-                    fuentes.append({"title": titulo, "url": url})
+                    fuentes.append({"title": str(titulo), "url": url})
 
-        # También recoge las citas que el modelo incluyó en su respuesta.
         if elemento.get("type") == "message":
             for contenido in elemento.get("content", []):
                 for anotacion in contenido.get("annotations", []):
                     cita = anotacion.get("url_citation", anotacion)
                     url = cita.get("url")
                     titulo = cita.get("title") or url
-                    if url and url not in vistas:
+                    if url_web_valida(url) and url not in vistas:
                         vistas.add(url)
-                        fuentes.append({"title": titulo, "url": url})
+                        fuentes.append({"title": str(titulo), "url": url})
 
     return fuentes
+
+
+def excede_limite(ip, ahora=None):
+    """Devuelve True si la IP superó la cuota de solicitudes por ventana."""
+    ahora = time.monotonic() if ahora is None else ahora
+    with _rate_limit_lock:
+        solicitudes = _solicitudes_por_ip[ip]
+        while solicitudes and ahora - solicitudes[0] >= RATE_LIMIT_WINDOW_SECONDS:
+            solicitudes.popleft()
+        if len(solicitudes) >= RATE_LIMIT_REQUESTS:
+            return True
+        solicitudes.append(ahora)
+        return False
 
 
 @app.get("/")
@@ -121,19 +172,25 @@ def chat():
         return jsonify({"error": "Escribe una pregunta para continuar."}), 400
 
     pregunta = pregunta.strip()
-
     if len(pregunta) > 1000:
         return jsonify({"error": "La pregunta es demasiado larga. Usa máximo 1000 caracteres."}), 400
 
-    destinos = detectar_destinos(pregunta)
+    ip = request.remote_addr or "desconocida"
+    if excede_limite(ip):
+        return jsonify({
+            "error": "Has enviado demasiadas preguntas. Espera un minuto antes de intentarlo de nuevo."
+        }), 429
 
-    if not destinos:
+    destinos = detectar_destinos(pregunta)
+    if not destinos or not pregunta_dentro_del_tema(pregunta):
         return jsonify({
             "answer": (
-                "Puedo ayudarte con información sobre los cinco destinos de "
-                "ExploraGuajira: Cabo de la Vela, Punta Gallinas, el Santuario "
-                "Los Flamencos, las Salinas de Manaure y el Centro Histórico "
-                "de Cartagena. Incluye el nombre de uno de ellos en tu pregunta."
+                "Soy el asistente turístico de ExploraGuajira y solo respondo "
+                "preguntas sobre la historia, cultura, fauna, flora, geografía, "
+                "importancia y actividades turísticas de estos cinco destinos: "
+                "Cabo de la Vela, Punta Gallinas, el Santuario Los Flamencos, "
+                "las Salinas de Manaure y el Centro Histórico de Cartagena. "
+                "Formula una pregunta dentro de ese tema e incluye el destino."
             ),
             "sources": []
         })
@@ -149,7 +206,6 @@ def chat():
 
     mostrar_fuentes = solicita_fuentes(pregunta)
     destinos_texto = ", ".join(destinos)
-
     instrucciones = f"""
 Eres el asistente turístico de ExploraGuajira.
 Tu único ámbito permitido son estos cinco destinos registrados:
@@ -160,21 +216,19 @@ Tu único ámbito permitido son estos cinco destinos registrados:
 - Centro Histórico de Cartagena
 
 La pregunta ha sido identificada como relacionada con: {destinos_texto}.
+Responde únicamente sobre esos destinos. Puedes hablar de su historia, fauna,
+flora, cultura, importancia ambiental, social o económica, geografía y
+actividades turísticas, y compararlos entre sí.
 
-Responde únicamente sobre esos destinos. Puedes hablar de su historia,
-fauna, flora, cultura, importancia ambiental, social o económica, y actividades
-turísticas, siempre que la información esté respaldada por fuentes fiables.
-Puedes comparar los destinos registrados entre sí.
-
-No respondas preguntas generales que no traten directamente sobre esos lugares.
-Si la pregunta se desvía del tema, explica brevemente el alcance del asistente.
+La validación del servidor no sustituye tu criterio: si la pregunta no trata
+directamente sobre esos destinos o sus temas turísticos, recházala brevemente.
 Busca información en la web antes de responder. Prioriza fuentes oficiales,
 instituciones públicas, entidades de conservación, universidades y organismos
 culturales. No inventes datos. Si no encuentras respaldo suficiente, dilo
 claramente y evita presentar suposiciones como hechos.
 
 Responde en español, con lenguaje claro y una extensión moderada.
-{"Si el visitante solicita fuentes, menciona que las fuentes consultadas se mostrarán mediante enlaces. Si no las solicita, no agregues una sección de fuentes ni enlaces en el texto." if mostrar_fuentes else "El visitante NO ha solicitado fuentes. No incluyas enlaces, citas visibles ni una sección de referencias en la respuesta."}
+{"Si el visitante solicita fuentes, indica que las fuentes consultadas se mostrarán mediante enlaces." if mostrar_fuentes else "El visitante NO ha solicitado fuentes. No incluyas enlaces, citas visibles ni una sección de referencias."}
 """
 
     try:
@@ -187,16 +241,8 @@ Responde en español, con lenguaje claro y una extensión moderada.
             include=["web_search_call.action.sources"],
             input=pregunta
         )
-
-        # Se envían al navegador para permitir una pregunta posterior como
-        # "¿Cuáles son las fuentes?". La interfaz solo las muestra si se piden.
         fuentes = extraer_fuentes(respuesta)
-
-        return jsonify({
-            "answer": respuesta.output_text,
-            "sources": fuentes
-        })
-
+        return jsonify({"answer": respuesta.output_text, "sources": fuentes})
     except Exception:
         app.logger.exception("Error al consultar OpenAI")
         return jsonify({
