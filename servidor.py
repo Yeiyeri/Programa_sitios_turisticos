@@ -77,18 +77,25 @@ def extraer_fuentes(respuesta):
     vistas = set()
 
     for elemento in datos.get("output", []):
-        if elemento.get("type") != "message":
-            continue
-
-        for contenido in elemento.get("content", []):
-            for anotacion in contenido.get("annotations", []):
-                cita = anotacion.get("url_citation", anotacion)
-                url = cita.get("url")
-                titulo = cita.get("title") or url
-
+        # Lista completa de páginas recuperadas por la herramienta web.
+        if elemento.get("type") == "web_search_call":
+            for fuente in elemento.get("action", {}).get("sources", []):
+                url = fuente.get("url")
+                titulo = fuente.get("title") or url
                 if url and url not in vistas:
                     vistas.add(url)
                     fuentes.append({"title": titulo, "url": url})
+
+        # También recoge las citas que el modelo incluyó en su respuesta.
+        if elemento.get("type") == "message":
+            for contenido in elemento.get("content", []):
+                for anotacion in contenido.get("annotations", []):
+                    cita = anotacion.get("url_citation", anotacion)
+                    url = cita.get("url")
+                    titulo = cita.get("title") or url
+                    if url and url not in vistas:
+                        vistas.add(url)
+                        fuentes.append({"title": titulo, "url": url})
 
     return fuentes
 
@@ -175,10 +182,13 @@ Responde en español, con lenguaje claro y una extensión moderada.
             instructions=instrucciones,
             tools=[{"type": "web_search"}],
             tool_choice="required",
+            include=["web_search_call.action.sources"],
             input=pregunta
         )
 
-        fuentes = extraer_fuentes(respuesta) if mostrar_fuentes else []
+        # Se envían al navegador para permitir una pregunta posterior como
+        # "¿Cuáles son las fuentes?". La interfaz solo las muestra si se piden.
+        fuentes = extraer_fuentes(respuesta)
 
         return jsonify({
             "answer": respuesta.output_text,
