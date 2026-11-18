@@ -64,7 +64,8 @@ async function cargarClima(opcion) {
         + "?latitude=" + opcion.dataset.lat
         + "&longitude=" + opcion.dataset.lon
         + "&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m"
-        + "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"
+        + "&daily=temperature_2m_max,temperature_2m_min"
+        + "&hourly=weather_code,precipitation_probability"
         + "&timezone=America%2FBogota&forecast_days=7";
 
     try {
@@ -80,7 +81,7 @@ async function cargarClima(opcion) {
         }
 
         mostrarClimaHoy(datos.current);
-        mostrarClimaDias(datos.daily);
+        mostrarClimaDias(datos.daily, datos.hourly);
         estado.textContent = "";
     } catch (error) {
         estado.className = "clima-estado error";
@@ -108,15 +109,53 @@ function crearTexto(etiqueta, clase, texto) {
     return elemento;
 }
 
+// Resume un día con las horas de 6 a.m. a 8 p.m.:
+// - condición: la que más se repite (si empatan, la menos severa)
+// - lluvia: promedio de la probabilidad de esas horas
+function resumenDelDia(horario, fecha) {
+    const conteo = {};
+    let sumaLluvia = 0;
+    let horas = 0;
+
+    for (let i = 0; i < horario.time.length; i++) {
+        if (!horario.time[i].startsWith(fecha)) {
+            continue;
+        }
+        const hora = Number(horario.time[i].slice(11, 13));
+        if (hora < 6 || hora > 20) {
+            continue;
+        }
+        const codigo = horario.weather_code[i];
+        conteo[codigo] = (conteo[codigo] || 0) + 1;
+        sumaLluvia += horario.precipitation_probability[i] ?? 0;
+        horas++;
+    }
+
+    let codigoFrecuente = 0;
+    let maximo = -1;
+    for (const codigo of Object.keys(conteo).map(Number).sort((a, b) => a - b)) {
+        if (conteo[codigo] > maximo) {
+            maximo = conteo[codigo];
+            codigoFrecuente = codigo;
+        }
+    }
+
+    return {
+        codigo: codigoFrecuente,
+        lluvia: horas ? Math.round(sumaLluvia / horas) : 0
+    };
+}
+
 // El índice 0 es hoy (ya está arriba); aquí se muestran los días siguientes
-function mostrarClimaDias(diario) {
+function mostrarClimaDias(diario, horario) {
     const contenedor = porId("clima-dias");
     contenedor.replaceChildren();
 
     for (let i = 1; i < diario.time.length; i++) {
         const fecha = new Date(diario.time[i] + "T00:00:00");
-        const [texto, icono] = infoClima(diario.weather_code[i]);
-        const lluvia = diario.precipitation_probability_max[i] ?? 0;
+        const resumen = resumenDelDia(horario, diario.time[i]);
+        const [texto, icono] = infoClima(resumen.codigo);
+        const lluvia = resumen.lluvia;
 
         const tarjeta = document.createElement("article");
         tarjeta.className = "clima-dia";
