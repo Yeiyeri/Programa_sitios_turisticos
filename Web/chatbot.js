@@ -2,6 +2,17 @@ const formularioChat = document.getElementById("formulario-chat");
 const entradaChat = document.getElementById("pregunta-chat");
 const mensajesChat = document.getElementById("mensajes-chat");
 const botonEnviarChat = document.getElementById("enviar-chat");
+let ultimasFuentes = [];
+
+function esSolicitudDeFuentes(texto) {
+    const pregunta = texto.toLocaleLowerCase("es");
+    return [
+        "fuente", "fuentes", "referencia", "referencias",
+        "enlace", "enlaces", "link", "links",
+        "de donde sacaste", "de dónde sacaste",
+        "de donde obtuviste", "de dónde obtuviste"
+    ].some((frase) => pregunta.includes(frase));
+}
 
 function agregarMensajeChat(texto, tipo) {
     const mensaje = document.createElement("div");
@@ -47,6 +58,17 @@ formularioChat.addEventListener("submit", async (evento) => {
 
     agregarMensajeChat(pregunta, "mensaje-usuario");
     entradaChat.value = "";
+
+    // Si el visitante pide las fuentes después de una respuesta,
+    // mostramos los enlaces guardados de la última consulta.
+    if (esSolicitudDeFuentes(pregunta) && ultimasFuentes.length > 0) {
+        const respuestaFuentes = agregarMensajeChat(
+            "Estas son las fuentes consultadas para mi respuesta anterior:",
+            "mensaje-asistente"
+        );
+        agregarFuentesChat(respuestaFuentes, ultimasFuentes);
+        return;
+    }
     entradaChat.disabled = true;
     botonEnviarChat.disabled = true;
 
@@ -67,11 +89,14 @@ formularioChat.addEventListener("submit", async (evento) => {
             return;
         }
 
+        ultimasFuentes = Array.isArray(datos.sources) ? datos.sources : [];
         const respuestaElemento = agregarMensajeChat(
             datos.answer || "No se recibió una respuesta.",
             "mensaje-asistente"
         );
-        agregarFuentesChat(respuestaElemento, datos.sources);
+        if (esSolicitudDeFuentes(pregunta)) {
+            agregarFuentesChat(respuestaElemento, ultimasFuentes);
+        }
     } catch (error) {
         cargando.remove();
         agregarMensajeChat(
