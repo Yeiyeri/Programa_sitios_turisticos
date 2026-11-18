@@ -1,87 +1,50 @@
 # ExploraGuajira
 
-ExploraGuajira es un proyecto académico que comenzó como una aplicación de consola desarrollada en Python y que actualmente está evolucionando hacia una página web. Su propósito es organizar y presentar información básica sobre destinos turísticos, principalmente de La Guajira.
+ExploraGuajira es un proyecto académico desarrollado en Python y tecnologías web para organizar y presentar información sobre destinos turísticos de Colombia, con énfasis en La Guajira.
 
-La versión web permite explorar cinco destinos mediante tarjetas con fotografías y descripciones, abrir sus ubicaciones en Google Maps y consultar un mapa integrado que cambia según el destino seleccionado.
+El proyecto cuenta con dos formas de uso:
 
-## 1. Objetivo del proyecto
+- **Aplicación de consola en Python:** permite listar destinos, consultar sus detalles y filtrarlos por tipo.
+- **Aplicación web:** presenta cinco destinos mediante tarjetas, fotografías, ubicaciones en Google Maps, consulta del clima y un asistente turístico con inteligencia artificial.
 
-El objetivo es ofrecer una forma sencilla y visual de conocer lugares de interés turístico. El proyecto conserva su versión inicial de consola en Python y cuenta con una primera interfaz web desarrollada con HTML, CSS y JavaScript.
+## 1. Objetivo
 
-## 2. Funcionalidades implementadas hasta el momento
+Ofrecer una herramienta sencilla para conocer cinco destinos turísticos registrados en el proyecto, consultar información básica sobre ellos y explorar sus ubicaciones. La versión web incorpora además un asistente que responde preguntas relacionadas con esos destinos.
 
-### Versión de consola (Python)
+## 2. Funcionalidades
 
-- Mostrar los sitios turísticos registrados.
+### Aplicación de consola
+
+- Mostrar todos los sitios turísticos registrados.
 - Consultar los detalles de un sitio.
-- Filtrar los sitios por tipo: Natural, Histórico o Popular.
+- Buscar sitios por tipo: Natural, Histórico o Popular.
 - Abrir la imagen del sitio seleccionado.
-- Construir y mostrar un enlace de Google Maps a partir de sus coordenadas.
+- Construir un enlace de Google Maps a partir de sus coordenadas.
 - Recorrer las opciones mediante un menú interactivo.
 
-### Versión web (HTML, CSS y JavaScript)
+### Aplicación web
 
-- Mostrar una sección de presentación de ExploraGuajira.
-- Presentar cinco destinos turísticos en tarjetas con imagen, nombre, ubicación y descripción.
-- Incluir enlaces «Ver ubicación» que abren Google Maps para cada destino.
-- Mostrar Google Maps dentro de la página mediante un elemento `iframe`.
-- Permitir seleccionar un destino en una lista desplegable y actualizar el mapa sin salir de la página.
-- Adaptar la distribución de las tarjetas y algunos elementos a pantallas más pequeñas mediante reglas CSS `@media`.
+- Mostrar una presentación de ExploraGuajira.
+- Presentar cinco destinos en tarjetas con fotografías, ubicación y descripción.
+- Abrir la ubicación de cada destino en Google Maps.
+- Mostrar un mapa integrado y actualizarlo al seleccionar otro destino.
+- Consultar el clima del destino seleccionado mediante Open-Meteo.
+- Mostrar condiciones actuales y un resumen del pronóstico de los próximos días.
+- Ofrecer un asistente turístico con una interfaz de chat.
 
-La consulta del clima ya está implementada mediante Open-Meteo. La sección «Acerca de» y algunos contenidos informativos adicionales siguen pendientes de desarrollo.
+### Asistente turístico
 
-## 3. Estructura del proyecto
+- Recibir preguntas desde la página web.
+- Responder únicamente sobre los cinco destinos registrados y temas turísticos relacionados.
+- Consultar información en la web mediante OpenAI Responses API y la herramienta `web_search` para las preguntas admitidas.
+- Presentar las respuestas en español.
+- Mostrar las fuentes consultadas cuando el visitante las solicite.
+- Validar las consultas, limitar su longitud y aplicar un límite básico de solicitudes por dirección IP.
+- Informar cuando falte la configuración de la API o se presente un error de conexión.
 
-La estructura de trabajo actual es:
+## 3. Destinos registrados
 
-```text
-Programa_sitios_turisticos/
-├── main.py
-├── sitios_turisticos.py
-├── README.md
-├── .gitignore
-├── Imagenes/
-│   ├── Centro_historico_cartagena.jpg
-│   ├── Salinas_de_manaure.jpg
-│   ├── Santuario_fauna_y_flora_los_flamencos.jpg
-│   ├── cabo_de_la_vela.jpg
-│   └── punta_gallinas.jpg
-└── Web/
-    ├── index.html
-    ├── style.css
-    └── script.js
-```
-
-### Responsabilidad de los archivos
-
-- **`main.py`**: contiene las funciones y el menú de la aplicación de consola.
-- **`sitios_turisticos.py`**: almacena la lista de destinos turísticos y sus datos.
-- **`Imagenes/`**: contiene las fotografías utilizadas en la página web.
-- **`Web/index.html`**: define la estructura y el contenido de la interfaz web.
-- **`Web/style.css`**: define los colores, la distribución, las tarjetas, los botones y los ajustes para pantallas pequeñas.
-- **`Web/script.js`**: controla el selector de destinos y actualiza la dirección del mapa integrado.
-- **`README.md`**: contiene la documentación general del proyecto.
-- **`.gitignore`**: excluye archivos temporales, entornos virtuales y configuración local.
-
-Es importante respetar los nombres y las mayúsculas de las carpetas y archivos al escribir las rutas de las imágenes.
-
-## 4. Datos de los destinos turísticos
-
-En `sitios_turisticos.py` se define una lista llamada `sitios_turisticos`. Cada elemento es un diccionario con información de un lugar.
-
-Los diccionarios utilizan estas claves:
-
-| Clave | Función |
-|---|---|
-| `nombre` | Nombre del destino. |
-| `tipo` | Categoría: Natural, Histórico o Popular. |
-| `ubicacion` | Ubicación escrita del sitio. |
-| `descripcion` | Descripción breve del lugar. |
-| `latitud` | Coordenada de latitud. |
-| `longitud` | Coordenada de longitud. |
-| `imagen` | Ruta del archivo de imagen asociado. |
-
-Los cinco destinos registrados son:
+Los cinco destinos incluidos son:
 
 1. **Cabo de la Vela** — Uribia, La Guajira.
 2. **Punta Gallinas** — Alta Guajira, La Guajira.
@@ -89,202 +52,124 @@ Los cinco destinos registrados son:
 4. **Salinas de Manaure** — Manaure, La Guajira.
 5. **Centro Histórico de Cartagena** — Cartagena de Indias, Bolívar.
 
-Se utiliza una lista para reunir los destinos y recorrerlos mediante ciclos. Los diccionarios permiten acceder a cada dato mediante una clave, por ejemplo `sitio["nombre"]` o `sitio["latitud"]`.
+En `sitios_turisticos.py` se define la lista `sitios_turisticos`. Cada elemento es un diccionario con información del destino, como nombre, tipo, ubicación, descripción, coordenadas y ruta de imagen.
 
-**Nota sobre las rutas de imágenes:** la página web utiliza rutas relativas desde `Web/`, como `../Imagenes/cabo_de_la_vela.jpg`. En cambio, los registros Python actualmente contienen rutas que comienzan por `imagenes/`. Conviene mantener o unificar estas rutas al revisar la compatibilidad de la versión de consola en distintos sistemas operativos.
+## 4. Estructura del proyecto
 
-## 5. Organización de la versión de consola
-
-El archivo `main.py` importa la lista de `sitios_turisticos.py` y contiene estas funciones:
-
-- **`mostrar_sitios()`**: recorre la lista y muestra el nombre y el tipo de cada destino.
-- **`mostrar_detalles()`**: muestra la lista numerada, solicita una selección, presenta los datos del destino, abre su imagen con Pillow y muestra un enlace de Google Maps.
-- **`mostrar_por_tipo()`**: permite elegir una categoría y muestra los destinos que coinciden con ella.
-- **`menu()`**: mantiene el menú activo con un ciclo `while` y ejecuta la función correspondiente a la opción elegida.
-
-El bloque `if __name__ == "__main__":` inicia el menú cuando se ejecuta directamente el archivo `main.py`.
-
-## 6. Organización de la versión web
-
-La carpeta `Web/` contiene tres archivos que trabajan en conjunto.
-
-### 6.1. HTML: `index.html`
-
-Define la estructura de la página:
-
-- **Barra de navegación:** contiene enlaces a Inicio, Destinos, Mapas, Clima y Acerca de.
-- **Presentación:** muestra el título «Descubre La Guajira», un texto introductorio y una imagen destacada.
-- **Destinos:** presenta cinco tarjetas. Cada tarjeta contiene una fotografía, el nombre del lugar, su ubicación, una descripción y un enlace para abrir su localización en Google Maps.
-- **Mapas:** contiene una lista desplegable y un mapa insertado mediante un `iframe`.
-
-Las imágenes de la web se referencian con rutas relativas. Por ejemplo:
-
-```html
-<img src="../Imagenes/cabo_de_la_vela.jpg"
-     alt="Paisaje del Cabo de la Vela">
+```text
+Programa_sitios_turisticos/
+├── .github/
+│   └── workflows/
+│       └── pruebas-chatbot.yml
+├── Imagenes/
+│   ├── Centro_historico_cartagena.jpg
+│   ├── Salinas_de_manaure.jpg
+│   ├── Santuario_fauna_y_flora_los_flamencos.jpg
+│   ├── cabo_de_la_vela.jpg
+│   └── punta_gallinas.jpg
+├── tests/
+│   └── test_servidor.py
+├── Web/
+│   ├── index.html
+│   ├── style.css
+│   ├── script.js
+│   ├── chatbot.css
+│   └── chatbot.js
+├── .env.example
+├── .gitignore
+├── main.py
+├── servidor.py
+├── sitios_turisticos.py
+├── requirements.txt
+├── requirements-dev.txt
+└── README.md
 ```
 
-### 6.2. CSS: `style.css`
+### Responsabilidad de los archivos principales
 
-Controla la presentación visual de la página. Actualmente incluye:
+- **`main.py`**: contiene el menú y las funciones de la aplicación de consola. Utiliza Pillow para abrir las imágenes.
+- **`sitios_turisticos.py`**: almacena la lista de destinos y sus datos.
+- **`servidor.py`**: crea el servidor Flask, sirve la página web, expone la ruta `/api/chat` y se comunica con OpenAI.
+- **`Web/index.html`**: define la estructura de la página y las secciones de destinos, mapas, clima y asistente.
+- **`Web/style.css`**: define los estilos generales de la página.
+- **`Web/script.js`**: controla el selector de destinos, el mapa y la consulta del clima.
+- **`Web/chatbot.js`**: envía preguntas al servidor y presenta respuestas y fuentes.
+- **`Web/chatbot.css`**: define los estilos de la interfaz del asistente.
+- **`Imagenes/`**: contiene las fotografías de los destinos.
+- **`tests/test_servidor.py`**: contiene las pruebas automatizadas del servidor.
+- **`requirements.txt`**: enumera las dependencias necesarias para ejecutar la aplicación.
+- **`requirements-dev.txt`**: incorpora las dependencias de desarrollo y pruebas.
+- **`.env.example`**: plantilla de configuración de variables de entorno, sin credenciales reales.
+- **`.gitignore`**: excluye archivos locales como el entorno virtual y `.env`.
+- **`.github/workflows/pruebas-chatbot.yml`**: configura la ejecución automatizada de las pruebas en GitHub Actions.
 
-- Barra de navegación verde y enlaces con efecto al pasar el cursor.
-- Distribución de la portada con Flexbox.
-- Cuadrícula de tarjetas con CSS Grid.
-- Fotografías recortadas para mantener una presentación uniforme.
-- Botones verdes para abrir las ubicaciones.
-- Contenedor del mapa con bordes redondeados y sombra.
-- Estilos para la lista desplegable de destinos.
-- Reglas `@media` para reorganizar las tarjetas y ajustar los espacios en pantallas pequeñas.
+Es importante respetar los nombres y las mayúsculas de las carpetas y archivos al escribir las rutas de las imágenes.
 
-### 6.3. JavaScript: `script.js`
+## 5. Requisitos
 
-Permite que el mapa cambie cuando el visitante selecciona otro destino.
-
-El archivo obtiene los elementos HTML mediante sus identificadores:
-
-- `destino-mapa`: identifica la lista desplegable.
-- `mapa-google`: identifica el `iframe` que contiene el mapa.
-
-Después escucha el evento `change` del selector. Cuando cambia la opción, obtiene el destino seleccionado, adapta el texto para utilizarlo en una URL mediante `encodeURIComponent()` y actualiza el atributo `src` del mapa.
-
-El archivo JavaScript se conecta desde `index.html`, justo antes de cerrar la etiqueta `body`:
-
-```html
-<script src="script.js"></script>
-```
-
-### 6.4. ¿Cómo se integra Google Maps?
-
-En esta etapa se utiliza un mapa insertado con un `iframe` y la dirección de Google Maps con el parámetro `output=embed`. JavaScript actualiza la búsqueda que se muestra en ese marco cuando cambia la selección.
-
-Esta solución permite mostrar un mapa dentro de la página sin implementar todavía Google Maps JavaScript API. Los enlaces «Ver ubicación» de las tarjetas, por su parte, abren Google Maps en otra pestaña.
-
-## 7. Requisitos
-
-### Para la versión web
-
+- Python instalado.
 - Un navegador web actualizado.
-- Los archivos HTML, CSS y JavaScript dentro de la carpeta `Web/`.
-- Las fotografías en la carpeta `Imagenes/`, con los nombres que aparecen en las rutas del HTML.
-- Conexión a Internet para cargar Google Maps.
+- Conexión a Internet para cargar Google Maps, consultar Open-Meteo y utilizar el asistente.
+- Una clave API válida de OpenAI para generar respuestas del asistente.
 
-Para abrir únicamente los archivos estáticos no se necesita instalar un paquete de Python. Para utilizar el servidor del chatbot, sí se deben instalar las dependencias indicadas en `requirements.txt`.
+La consulta del clima utiliza Open-Meteo y no requiere una clave API propia. El asistente sí necesita la variable `OPENAI_API_KEY` configurada en el entorno.
 
-### Para la versión de consola
+## 6. Instalación y configuración
 
-- Python 3.
-- Pillow, utilizada por `main.py` para abrir las imágenes.
+Los siguientes comandos se ejecutan desde la carpeta principal del repositorio.
 
-Instalación de Pillow:
+### 6.1. Crear y activar un entorno virtual
 
-```bash
-python -m pip install Pillow
-```
-
-## 8. Cómo ejecutar el proyecto
-
-### Abrir la página web
-
-1. Abre la carpeta principal del proyecto en Visual Studio Code.
-2. Entra en la carpeta `Web/`.
-3. Abre `index.html` en un navegador. También puedes utilizar Live Server si tienes instalada esa extensión.
-4. Comprueba que se carguen las imágenes y las cinco tarjetas.
-5. En la sección Mapas, selecciona diferentes destinos y verifica que el mapa se actualice.
-
-Si una fotografía no aparece, revisa que el nombre del archivo y la ruta de `src` coincidan exactamente con los archivos de `Imagenes/`.
-
-### Ejecutar la aplicación de consola
-
-1. Abre una terminal en la carpeta principal del proyecto.
-2. Si todavía no está instalada, instala Pillow.
-3. Ejecuta:
-
-```bash
-python main.py
-```
-
-El menú permite mostrar todos los destinos, consultar los detalles de uno, filtrar por categoría o salir.
-
-## 9. Alcance actual y trabajo pendiente
-
-### Lo que ya está desarrollado
-
-- Estructura de datos turística en Python mediante una lista de diccionarios.
-- Menú de consola para listar, consultar y filtrar destinos.
-- Página web inicial con navegación y presentación.
-- Cinco tarjetas de destinos con imágenes y descripciones.
-- Enlaces individuales a las ubicaciones de Google Maps.
-- Mapa integrado en la página.
-- Selector que cambia el destino mostrado en el mapa.
-- Estilos visuales y adaptación básica a pantallas pequeñas.
-
-### Lo que falta por desarrollar
-
-- Conectar la información de `sitios_turisticos.py` con la página web. Actualmente, las tarjetas HTML y las opciones del selector están escritas manualmente.
-- Implementar una consulta del clima mediante un servicio o API meteorológica.
-- Crear el contenido de las secciones Clima y Acerca de.
-- Evaluar futuras mejoras de interacción y presentación.
-
-Por ahora, la versión web es una interfaz estática con interacción en el navegador. Todavía no existe una conexión entre la página y un servidor backend en Python, ni una base de datos.
-
-## 10. Conclusión
-
-ExploraGuajira ha pasado de una primera aplicación de consola en Python a una versión web inicial desarrollada con HTML, CSS y JavaScript. La aplicación de consola permite consultar y filtrar los destinos registrados, mientras que la página web presenta esos lugares mediante tarjetas, enlaces a Google Maps y un mapa integrado que cambia según la selección del visitante.
-
-El proyecto continúa en desarrollo. Los siguientes avances previstos son conectar los datos de Python con la web e incorporar la consulta del clima de los destinos.
-
-## 11. Asistente turístico con inteligencia artificial (en desarrollo)
-
-La rama `chatbot-ia` incorpora una primera versión de la interfaz de conversación y un servidor backend en Python con Flask.
-
-### Funcionalidad prevista
-
-- Recibir preguntas desde la página web.
-- Limitar las preguntas a los cinco destinos registrados en ExploraGuajira.
-- Consultar la web mediante OpenAI Responses API y su herramienta `web_search`.
-- Mostrar una respuesta en español.
-- Mostrar los enlaces de las fuentes únicamente cuando el visitante los solicite.
-- Indicar cuando la conexión con OpenAI todavía no está configurada o cuando ocurre un error.
-
-### Archivos añadidos
-
-- **`servidor.py`**: servidor Flask y conexión con OpenAI.
-- **`requirements.txt`**: dependencias de Python.
-- **`.env.example`**: plantilla de variables de entorno; no contiene una clave real.
-- **`Web/chatbot.js`**: envío de preguntas y presentación de respuestas y fuentes.
-- **`Web/chatbot.css`**: estilos de la interfaz del chat.
-
-### Preparar el entorno local
-
-Desde la carpeta principal del proyecto, abre una terminal y ejecuta:
-
-```bash
-python -m venv .venv
-```
-
-Activa el entorno virtual en Windows:
+En Windows PowerShell:
 
 ```powershell
-.venv\\Scripts\\Activate.ps1
+python -m venv .venv
+.venv\Scripts\Activate.ps1
 ```
 
-Instala las dependencias:
+Si PowerShell bloquea la activación del entorno, se puede utilizar la terminal de CMD:
+
+```bat
+.venv\Scripts\activate.bat
+```
+
+### 6.2. Instalar las dependencias
+
+Para ejecutar la aplicación:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-Copia `.env.example` a un archivo llamado `.env` y configura allí la clave autorizada de OpenAI:
+Para instalar también las herramientas de pruebas:
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+
+`requirements-dev.txt` incluye las dependencias de `requirements.txt` y agrega pytest.
+
+### 6.3. Configurar la API de OpenAI
+
+1. Copia el archivo `.env.example` y crea, en la raíz del proyecto, un archivo llamado `.env`.
+2. Abre `.env` y configura las variables:
 
 ```env
-OPENAI_API_KEY=tu_clave_secreta
+OPENAI_API_KEY=tu_clave_api
 OPENAI_MODEL=gpt-5.5
 ```
 
-El archivo `.env` está excluido de Git mediante `.gitignore`. Nunca publiques la clave en GitHub ni la incluyas en archivos HTML o JavaScript. La creación de la cuenta de API y cualquier configuración de pagos deben realizarse con acompañamiento de un padre, madre o tutor, según los requisitos de edad aplicables.
+3. Guarda el archivo.
 
-Inicia el servidor:
+La clave debe mantenerse privada. No la escribas en archivos HTML o JavaScript, no la subas a GitHub y no la compartas en capturas o conversaciones. El archivo `.env` está excluido mediante `.gitignore`; el archivo `.env.example` solo contiene nombres de variables y valores de ejemplo.
+
+La creación y administración de una cuenta API y cualquier configuración de pagos deben realizarse con el acompañamiento de un padre, madre o tutor, de acuerdo con los requisitos de edad aplicables.
+
+## 7. Cómo ejecutar el proyecto
+
+### 7.1. Iniciar la aplicación web y el asistente
+
+Desde la carpeta principal, con el entorno virtual activado, ejecuta:
 
 ```bash
 python servidor.py
@@ -292,19 +177,104 @@ python servidor.py
 
 Abre en el navegador:
 
-```
+```text
 http://127.0.0.1:5000
 ```
 
-Si todavía no se ha configurado `OPENAI_API_KEY`, la página y la interfaz del chat podrán abrirse, pero el servidor avisará que falta la configuración y no generará respuestas de IA.
+Flask sirve `Web/index.html` en la ruta principal y los recursos estáticos de la carpeta `Web/`. La ruta `POST /api/chat` recibe las preguntas del asistente.
 
-### Consideraciones
+Mantén abierta la terminal mientras utilizas la página. Para detener el servidor, vuelve a esa terminal y presiona `Ctrl + C`.
 
-- La búsqueda web se solicita en cada consulta admitida.
-- Las consultas a la API y el uso de búsqueda web pueden generar costos según la cuenta y los precios vigentes.
-- `servidor.py` utiliza el servidor de desarrollo de Flask. No debe utilizarse tal cual como servidor público de producción.
-- El servidor comprueba que la consulta mencione uno de los cinco destinos y términos de turismo, geografía, historia, cultura, ambiente o economía. Esta validación por palabras clave es una barrera básica, no un clasificador semántico infalible; las instrucciones del modelo también restringen el tema.
-- Se aplica un límite de 12 solicitudes por minuto y por IP en memoria. En un despliegue con varios procesos o instancias debe sustituirse por un limitador compartido, por ejemplo Redis, y configurarse correctamente el proxy de confianza.
-- Los enlaces de fuentes se validan en el servidor y en el navegador para aceptar únicamente direcciones HTTP o HTTPS.
-- Las pruebas automatizadas se encuentran en `tests/test_servidor.py`. Para ejecutarlas instala `requirements-dev.txt` y ejecuta `pytest -q`. GitHub Actions ejecuta estas pruebas al subir cambios a `main` o `chatbot-ia` y en las solicitudes de integración.
+Si no se ha configurado `OPENAI_API_KEY`, la página web podrá abrirse, pero el asistente no podrá generar respuestas y mostrará un aviso de configuración.
 
+### 7.2. Ejecutar la aplicación de consola
+
+En otra terminal, desde la carpeta principal y con las dependencias instaladas, ejecuta:
+
+```bash
+python main.py
+```
+
+El menú permite:
+
+1. Mostrar todos los sitios turísticos.
+2. Consultar los detalles de un sitio.
+3. Buscar sitios por tipo.
+4. Salir.
+
+La aplicación de consola es independiente del servidor web.
+
+## 8. Clima y mapas
+
+La página utiliza un mapa de Google Maps insertado mediante un `iframe`. Cuando el visitante selecciona otro destino, JavaScript actualiza la ubicación del mapa.
+
+La consulta del clima se realiza desde `Web/script.js` mediante el servicio Open-Meteo. Se utilizan las coordenadas del destino seleccionado y la zona horaria `America/Bogota`. La interfaz presenta temperatura, sensación térmica, humedad, viento y un resumen del pronóstico de los días siguientes.
+
+Estas funciones necesitan conexión a Internet. Si el servicio externo no responde, la página muestra un mensaje indicando que no fue posible cargar la información.
+
+## 9. Alcance y validaciones del asistente
+
+El asistente está limitado a preguntas sobre estos cinco destinos: Cabo de la Vela, Punta Gallinas, Santuario de Fauna y Flora Los Flamencos, Salinas de Manaure y Centro Histórico de Cartagena.
+
+El servidor aplica una validación inicial basada en palabras clave: la pregunta debe mencionar uno de los destinos reconocidos y contener términos relacionados con turismo, geografía, historia, cultura, ambiente o economía. Esta validación es una barrera sencilla y no un clasificador semántico infalible. Las instrucciones enviadas al modelo también delimitan el contenido de las respuestas.
+
+Otras validaciones implementadas:
+
+- La pregunta debe ser texto y no puede estar vacía.
+- La longitud máxima es de 1000 caracteres.
+- El cuerpo de la solicitud tiene un tamaño máximo configurado en Flask.
+- Se aplica un límite de 12 solicitudes por minuto y por dirección IP.
+- Las fuentes se extraen y se validan para aceptar únicamente URL HTTP o HTTPS.
+- Las fuentes no se muestran en la respuesta inicial, salvo que el visitante las solicite.
+
+### Consideraciones técnicas
+
+- Cada consulta admitida requiere una llamada a OpenAI con la herramienta de búsqueda web obligatoria. El uso de la API y de la búsqueda puede tener costos según las condiciones de la cuenta y los precios vigentes.
+- El límite de solicitudes se almacena en memoria. Para un despliegue con varios procesos o instancias debe utilizarse un mecanismo compartido, por ejemplo Redis.
+- El servidor incluido utiliza el servidor de desarrollo de Flask. Antes de publicar el proyecto en Internet se debe configurar un servidor WSGI de producción, HTTPS, controles de seguridad y un limitador de solicitudes apropiado.
+- No se debe publicar el archivo `.env` ni registrar claves API en el repositorio.
+
+## 10. Pruebas automatizadas e integración continua
+
+Las pruebas del servidor se encuentran en `tests/test_servidor.py`.
+
+Instala las dependencias de desarrollo:
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+
+Ejecuta las pruebas desde la raíz del proyecto:
+
+```bash
+python -m pytest -q
+```
+
+La configuración de GitHub Actions está en `.github/workflows/pruebas-chatbot.yml`. El flujo instala las dependencias y ejecuta pytest en los eventos configurados para las ramas `main` y `chatbot-ia`, y para solicitudes de integración dirigidas a `main`.
+
+Las pruebas automatizadas verifican comportamientos del servidor. No sustituyen las pruebas manuales de la página web, la conexión con OpenAI ni la disponibilidad de servicios externos.
+
+## 11. Ramas de trabajo
+
+El desarrollo del asistente se realiza en la rama `chatbot-ia`. Los cambios de esta rama no se incorporan a `main` automáticamente; su integración debe realizarse mediante una revisión y una decisión explícita del equipo del proyecto.
+
+Para cambiar a la rama del asistente:
+
+```bash
+git switch chatbot-ia
+git pull origin chatbot-ia
+```
+
+## 12. Estado del proyecto
+
+El proyecto integra actualmente:
+
+- Aplicación de consola en Python.
+- Página web con cinco destinos turísticos.
+- Mapa interactivo de Google Maps.
+- Consulta del clima mediante Open-Meteo.
+- Asistente turístico conectado a un backend Flask y OpenAI.
+- Validaciones básicas de alcance, longitud de preguntas, frecuencia de solicitudes y enlaces de fuentes.
+- Pruebas automatizadas y flujo de integración continua con GitHub Actions.
+
+ExploraGuajira continúa siendo un proyecto académico en evolución. Las funcionalidades externas dependen de la conexión a Internet y de la disponibilidad y configuración de sus respectivos servicios.
