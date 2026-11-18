@@ -233,3 +233,75 @@ Por ahora, la versión web es una interfaz estática con interacción en el nave
 ExploraGuajira ha pasado de una primera aplicación de consola en Python a una versión web inicial desarrollada con HTML, CSS y JavaScript. La aplicación de consola permite consultar y filtrar los destinos registrados, mientras que la página web presenta esos lugares mediante tarjetas, enlaces a Google Maps y un mapa integrado que cambia según la selección del visitante.
 
 El proyecto continúa en desarrollo. Los siguientes avances previstos son conectar los datos de Python con la web e incorporar la consulta del clima de los destinos.
+
+## 11. Asistente turístico con inteligencia artificial (en desarrollo)
+
+La rama `chatbot-ia` incorpora una primera versión de la interfaz de conversación y un servidor backend en Python con Flask.
+
+### Funcionalidad prevista
+
+- Recibir preguntas desde la página web.
+- Limitar las preguntas a los cinco destinos registrados en ExploraGuajira.
+- Consultar la web mediante OpenAI Responses API y su herramienta `web_search`.
+- Mostrar una respuesta en español.
+- Mostrar los enlaces de las fuentes únicamente cuando el visitante los solicite.
+- Indicar cuando la conexión con OpenAI todavía no está configurada o cuando ocurre un error.
+
+### Archivos añadidos
+
+- **`servidor.py`**: servidor Flask y conexión con OpenAI.
+- **`requirements.txt`**: dependencias de Python.
+- **`.env.example`**: plantilla de variables de entorno; no contiene una clave real.
+- **`Web/chatbot.js`**: envío de preguntas y presentación de respuestas y fuentes.
+- **`Web/chatbot.css`**: estilos de la interfaz del chat.
+
+### Preparar el entorno local
+
+Desde la carpeta principal del proyecto, abre una terminal y ejecuta:
+
+```bash
+python -m venv .venv
+```
+
+Activa el entorno virtual en Windows:
+
+```powershell
+.venv\\Scripts\\Activate.ps1
+```
+
+Instala las dependencias:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Copia `.env.example` a un archivo llamado `.env` y configura allí la clave autorizada de OpenAI:
+
+```env
+OPENAI_API_KEY=tu_clave_secreta
+OPENAI_MODEL=gpt-5.5
+```
+
+El archivo `.env` está excluido de Git mediante `.gitignore`. Nunca publiques la clave en GitHub ni la incluyas en archivos HTML o JavaScript. La creación de la cuenta de API y cualquier configuración de pagos deben realizarse con acompañamiento de un padre, madre o tutor, según los requisitos de edad aplicables.
+
+Inicia el servidor:
+
+```bash
+python servidor.py
+```
+
+Abre en el navegador:
+
+```
+http://127.0.0.1:5000
+```
+
+Si todavía no se ha configurado `OPENAI_API_KEY`, la página y la interfaz del chat podrán abrirse, pero el servidor avisará que falta la configuración y no generará respuestas de IA.
+
+### Consideraciones
+
+- La búsqueda web se solicita en cada consulta admitida.
+- Las consultas a la API y el uso de búsqueda web pueden generar costos según la cuenta y los precios vigentes.
+- `servidor.py` utiliza el servidor de desarrollo de Flask. No debe utilizarse tal cual como servidor público de producción.
+- El filtro de destinos es una validación inicial basada en los nombres y alias registrados. Antes de publicar el sitio, conviene reforzar las pruebas de alcance y seguridad.
+
