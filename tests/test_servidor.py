@@ -1,6 +1,13 @@
 import os
+import sys
+from pathlib import Path
 
 import pytest
+
+# Asegura que el módulo del servidor (en la raíz del proyecto) sea importable
+# cuando pytest ejecuta los archivos dentro de la carpeta tests.
+RAIZ_PROYECTO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(RAIZ_PROYECTO))
 
 import servidor
 
