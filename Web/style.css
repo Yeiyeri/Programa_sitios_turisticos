@@ -93,6 +93,11 @@ main h2 {
 
 .destinos h2,
 .mapas h2,
+.clima h2 {
+    color: #176b45;
+    font-size: 32px;
+}
+
 .destinos-intro {
     color: #555;
     font-size: 17px;
