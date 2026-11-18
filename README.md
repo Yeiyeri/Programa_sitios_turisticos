@@ -303,5 +303,8 @@ Si todavía no se ha configurado `OPENAI_API_KEY`, la página y la interfaz del 
 - La búsqueda web se solicita en cada consulta admitida.
 - Las consultas a la API y el uso de búsqueda web pueden generar costos según la cuenta y los precios vigentes.
 - `servidor.py` utiliza el servidor de desarrollo de Flask. No debe utilizarse tal cual como servidor público de producción.
-- El filtro de destinos es una validación inicial basada en los nombres y alias registrados. Antes de publicar el sitio, conviene reforzar las pruebas de alcance y seguridad.
+- El servidor comprueba que la consulta mencione uno de los cinco destinos y términos de turismo, geografía, historia, cultura, ambiente o economía. Esta validación por palabras clave es una barrera básica, no un clasificador semántico infalible; las instrucciones del modelo también restringen el tema.
+- Se aplica un límite de 12 solicitudes por minuto y por IP en memoria. En un despliegue con varios procesos o instancias debe sustituirse por un limitador compartido, por ejemplo Redis, y configurarse correctamente el proxy de confianza.
+- Los enlaces de fuentes se validan en el servidor y en el navegador para aceptar únicamente direcciones HTTP o HTTPS.
+- Las pruebas automatizadas se encuentran en `tests/test_servidor.py`. Para ejecutarlas instala `requirements-dev.txt` y ejecuta `pytest -q`. GitHub Actions ejecuta estas pruebas al subir cambios a `main` o `chatbot-ia` y en las solicitudes de integración.
 
