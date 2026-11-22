@@ -5,6 +5,7 @@ import time
 import unicodedata
 from collections import defaultdict, deque
 from urllib.parse import urlparse
+import json
 
 from flask import Flask, jsonify, request, send_from_directory
 from dotenv import load_dotenv
@@ -15,25 +16,47 @@ load_dotenv()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WEB_DIR = os.path.join(BASE_DIR, "Web")
 IMAGE_DIR = os.path.join(BASE_DIR, "Imagenes")
+DATOS_DIR = os.path.join(BASE_DIR, "datos")
+DESTINOS_FILE = os.path.join(DATOS_DIR, "destinos.json")
 
 app = Flask(__name__, static_folder=WEB_DIR, static_url_path="")
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5.5")
 
+def cargar_destinos():
+    """Carga los destinos turísticos desde el archivo JSON."""
+    try:
+        with open(DESTINOS_FILE, "r", encoding="utf-8") as archivo:
+            destinos = json.load(archivo)
+
+        if not isinstance(destinos, list):
+            raise ValueError("El JSON debe contener una lista de destinos.")
+
+        for destino in destinos:
+            campos_obligatorios = (
+                "nombre", "tipo", "ubicacion", "descripcion",
+                "latitud", "longitud", "imagen", "alias"
+            )
+
+            if not all(campo in destino for campo in campos_obligatorios):
+                raise ValueError(
+                    f"Faltan campos obligatorios en un destino: {destino}"
+                )
+
+        return destinos
+
+    except (OSError, json.JSONDecodeError, ValueError) as error:
+        raise RuntimeError(
+            f"No se pudieron cargar los destinos: {error}"
+        ) from error
+
+
+DESTINOS_DATOS = cargar_destinos()
+
 DESTINOS = {
-    "Cabo de la Vela": ["cabo de la vela", "el cabo de la vela"],
-    "Punta Gallinas": ["punta gallinas", "punta gallina"],
-    "Santuario de Fauna y Flora Los Flamencos": [
-        "santuario de fauna y flora los flamencos",
-        "santuario los flamencos", "los flamencos", "flamencos"
-    ],
-    "Salinas de Manaure": [
-        "salinas de manaure", "salina de manaure", "manaure"
-    ],
-    "Centro Histórico de Cartagena": [
-        "centro historico de cartagena", "centro de cartagena", "cartagena"
-    ],
+    destino["nombre"]: destino["alias"]
+    for destino in DESTINOS_DATOS
 }
 
 # Términos que indican una consulta turística, geográfica, histórica,
@@ -167,6 +190,10 @@ def excede_limite(ip, ahora=None):
 def inicio():
     return send_from_directory(WEB_DIR, "index.html")
 
+@app.get("/api/destinos")
+def obtener_destinos():
+    """Devuelve los destinos turísticos registrados."""
+    return jsonify(DESTINOS_DATOS)
 
 @app.get("/Imagenes/<path:nombre>")
 def imagenes(nombre):
@@ -216,30 +243,33 @@ def chat():
 
     mostrar_fuentes = solicita_fuentes(pregunta)
     destinos_texto = ", ".join(destinos)
+    nombres_destinos = "\n".join(
+    f"- {destino['nombre']}" for destino in DESTINOS_DATOS
+)
+
     instrucciones = f"""
-Eres el asistente turístico de ExploraGuajira.
-Tu único ámbito permitido son estos cinco destinos registrados:
-- Cabo de la Vela
-- Punta Gallinas
-- Santuario de Fauna y Flora Los Flamencos
-- Salinas de Manaure
-- Centro Histórico de Cartagena
+    Eres el asistente turístico de ExploraGuajira.
+    Tu único ámbito permitido son estos destinos registrados:
 
-La pregunta ha sido identificada como relacionada con: {destinos_texto}.
-Responde únicamente sobre esos destinos. Puedes hablar de su historia, fauna,
-flora, cultura, importancia ambiental, social o económica, geografía y
-actividades turísticas, y compararlos entre sí.
+    {nombres_destinos}
 
-La validación del servidor no sustituye tu criterio: si la pregunta no trata
-directamente sobre esos destinos o sus temas turísticos, recházala brevemente.
-Busca información en la web antes de responder. Prioriza fuentes oficiales,
-instituciones públicas, entidades de conservación, universidades y organismos
-culturales. No inventes datos. Si no encuentras respaldo suficiente, dilo
-claramente y evita presentar suposiciones como hechos.
+    La pregunta ha sido identificada como relacionada con: {destinos_texto}.
+    Responde únicamente sobre esos destinos. Puedes hablar de su historia, fauna,
+    flora, cultura, importancia ambiental, social o económica, geografía y
+    actividades turísticas, y compararlos entre sí.
 
-Responde en español, con lenguaje claro y una extensión moderada.
-{"Si el visitante solicita fuentes, indica que las fuentes consultadas se mostrarán mediante enlaces." if mostrar_fuentes else "El visitante NO ha solicitado fuentes. No incluyas enlaces, citas visibles ni una sección de referencias."}
-"""
+    La validación del servidor no sustituye tu criterio: si la pregunta no trata
+    directamente sobre esos destinos o sus temas turísticos, recházala brevemente.
+    Busca información en la web antes de responder. Prioriza fuentes oficiales,
+    instituciones públicas, entidades de conservación, universidades y organismos
+    culturales. No inventes datos. Si no encuentras respaldo suficiente, dilo
+    claramente y evita presentar suposiciones como hechos.
+
+    Responde en español, con lenguaje claro y una extensión moderada.
+    {"Si el visitante solicita fuentes, indica que las fuentes consultadas se mostrarán mediante enlaces." if mostrar_fuentes else "El visitante NO ha solicitado fuentes. No incluyas enlaces, citas visibles ni una sección de referencias."}
+    """
+
+
 
     try:
         cliente = OpenAI(api_key=api_key)

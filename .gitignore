@@ -8,3 +8,9 @@ venv/
 
 # Configuración local
 .env
+
+# Configuración local de Visual Studio Code
+.vscode/
+
+# Caché de pruebas
+.pytest_cache/

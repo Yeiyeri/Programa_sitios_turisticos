@@ -1,18 +1,123 @@
 const selector = document.getElementById("destino-mapa");
 const mapa = document.getElementById("mapa-google");
+const contenedorDestinos = document.getElementById("contenedor-destinos");
 
-selector.addEventListener("change", function () {
+let destinos = [];
 
-    const destino = selector.value;
+/* ---------- Carga dinámica de destinos ---------- */
 
-    const ubicacion = encodeURIComponent(destino);
+async function cargarDestinos() {
+    try {
+        const respuesta = await fetch("/api/destinos");
 
-    mapa.src = `https://www.google.com/maps?q=${ubicacion}&output=embed`;
+        if (!respuesta.ok) {
+            throw new Error("No se pudieron obtener los destinos.");
+        }
 
-    // Actualiza el clima del destino elegido
-    cargarClima(selector.selectedOptions[0]);
+        destinos = await respuesta.json();
 
-});
+        if (!Array.isArray(destinos) || destinos.length === 0) {
+            throw new Error("No hay destinos registrados.");
+        }
+
+        mostrarDestinos();
+        llenarSelector();
+
+        // Selecciona automáticamente el primer destino
+        selector.value = destinos[0].id;
+        actualizarDestino();
+
+    } catch (error) {
+        console.error("Error cargando destinos:", error);
+
+        contenedorDestinos.textContent =
+            "No se pudieron cargar los destinos turísticos.";
+
+        selector.replaceChildren();
+        selector.add(new Option("No hay destinos disponibles", ""));
+        selector.disabled = true;
+    }
+}
+
+/* ---------- Mostrar tarjetas de destinos ---------- */
+
+function mostrarDestinos() {
+    contenedorDestinos.replaceChildren();
+
+    destinos.forEach(destino => {
+        const tarjeta = document.createElement("article");
+        tarjeta.className = "tarjeta-destino";
+        const imagen = document.createElement("img");
+        imagen.src = `/Imagenes/${encodeURIComponent(destino.imagen)}`;
+        imagen.alt = destino.nombre;
+        imagen.loading = "lazy";
+
+        const contenido = document.createElement("div");
+        contenido.className = "contenido-destino";
+        const titulo = document.createElement("h3");
+        titulo.textContent = destino.nombre;
+
+        const tipo = document.createElement("p");
+        tipo.textContent = destino.tipo;
+
+        const ubicacion = document.createElement("p");
+        ubicacion.textContent = destino.ubicacion;
+
+        const descripcion = document.createElement("p");
+        descripcion.textContent = destino.descripcion;
+
+        const enlace = document.createElement("a");
+        enlace.textContent = "Ver en Google Maps";
+        enlace.href =
+            `https://www.google.com/maps?q=${destino.latitud},${destino.longitud}`;
+        enlace.target = "_blank";
+        enlace.rel = "noopener noreferrer";
+
+        contenido.append(titulo, tipo, ubicacion, descripcion, enlace);
+        tarjeta.append(imagen, contenido);
+
+        contenedorDestinos.appendChild(tarjeta);
+    });
+}
+
+/* ---------- Llenar selector del mapa ---------- */
+
+function llenarSelector() {
+    selector.replaceChildren();
+
+    destinos.forEach(destino => {
+        const opcion = new Option(destino.nombre, destino.id);
+
+        opcion.dataset.lat = destino.latitud;
+        opcion.dataset.lon = destino.longitud;
+        opcion.dataset.nombre = destino.nombre;
+
+        selector.add(opcion);
+    });
+
+    selector.disabled = false;
+}
+
+/* ---------- Actualizar mapa y clima ---------- */
+
+function actualizarDestino() {
+    const idDestino = selector.value;
+
+    const destino = destinos.find(d => d.id === idDestino);
+
+    if (!destino) {
+        return;
+    }
+
+    mapa.src =
+        `https://www.google.com/maps?q=${destino.latitud},${destino.longitud}&output=embed`;
+
+    const opcion = selector.selectedOptions[0];
+
+    cargarClima(opcion);
+}
+
+selector.addEventListener("change", actualizarDestino);
 
 /* ---------- Clima (API Open-Meteo, no requiere clave) ---------- */
 
@@ -190,5 +295,5 @@ function mostrarClimaDias(diario, horario) {
     porId("clima-subtitulo").hidden = false;
 }
 
-// Clima del destino que aparece seleccionado al abrir la página
-cargarClima(selector.selectedOptions[0]);
+// Inicializa la página cargando los destinos desde el servidor
+cargarDestinos();
