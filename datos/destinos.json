@@ -8,7 +8,7 @@
     "latitud": 12.195810783645866,
     "longitud": -72.14721863564708,
     "imagen": "cabo_de_la_vela.jpg",
-    "alias": ["cabo de la vela", "cabo"]
+    "alias": ["cabo de la vela", "cabo", "el cabo de la vela"]
   },
   {
     "id": "punta-gallinas",
@@ -19,7 +19,7 @@
     "latitud": 12.45832211845142,
     "longitud": -71.66616741055893,
     "imagen": "punta_gallinas.jpg",
-    "alias": ["punta gallinas"]
+    "alias": ["punta gallinas", "punta gallina"]
   },
   {
     "id": "santuario-los-flamencos",
@@ -30,7 +30,7 @@
     "latitud": 11.371272479984055,
     "longitud": -73.12104781356018,
     "imagen": "Santuario_fauna_y_flora_los_flamencos.jpg",
-    "alias": ["santuario los flamencos", "los flamencos"]
+    "alias": ["santuario los flamencos", "los flamencos", "flamencos"]
   },
   {
     "id": "salinas-de-manaure",
@@ -41,7 +41,7 @@
     "latitud": 11.763161389154261,
     "longitud": -72.51912472050132,
     "imagen": "Salinas_de_manaure.jpg",
-    "alias": ["salinas de manaure", "manaure"]
+    "alias": ["salinas de manaure", "manaure", "salina de manaure"]
   },
   {
     "id": "centro-historico-cartagena",
@@ -52,6 +52,6 @@
     "latitud": 10.424679969044202,
     "longitud": -75.55196698756905,
     "imagen": "Centro_historico_cartagena.jpg",
-    "alias": ["centro historico de cartagena", "cartagena"]
+    "alias": ["centro historico de cartagena", "cartagena", "centro de cartagena"]
   }
 ]
