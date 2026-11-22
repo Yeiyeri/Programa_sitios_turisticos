@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,6 +22,7 @@
         </ul>
     </nav>
 </header>
+
 <main>
     <section class="presentacion" id="inicio">
         <div class="presentacion-texto">
@@ -28,95 +30,112 @@
             <p>Explora paisajes increíbles, conoce lugares únicos y descubre la riqueza turística de Colombia.</p>
         </div>
         <div class="presentacion-imagen">
-            <img src="../Imagenes/Centro_historico_cartagena.jpg" alt="Vista del Centro Histórico de Cartagena">
+            <img src="/Imagenes/Centro_historico_cartagena.jpg"
+                 alt="Vista del Centro Histórico de Cartagena">
         </div>
     </section>
 
     <section class="destinos" id="destinos">
         <h2>Explora nuestros destinos</h2>
-        <p class="destinos-intro">Conoce algunos de los lugares turísticos más interesantes de Colombia.</p>
-        <div class="contenedor-destinos">
-            <article class="tarjeta-destino">
-                <img src="../Imagenes/cabo_de_la_vela.jpg" alt="Paisaje del Cabo de la Vela">
-                <h3>Cabo de la Vela</h3><p>Uribia, La Guajira</p>
-                <p>Un destino natural reconocido por sus paisajes desérticos y playas.</p>
-                <a href="https://www.google.com/maps?q=12.195810783645866,-72.14721863564708" target="_blank" rel="noopener noreferrer" class="boton-mapa">Ver ubicación</a>
-            </article>
-            <article class="tarjeta-destino">
-                <img src="../Imagenes/punta_gallinas.jpg" alt="Paisaje de Punta Gallinas">
-                <h3>Punta Gallinas</h3><p>Alta Guajira</p>
-                <p>Uno de los lugares más representativos de los paisajes naturales de La Guajira.</p>
-                <a href="https://www.google.com/maps?q=12.457743493906435,-71.6680556658649" target="_blank" rel="noopener noreferrer" class="boton-mapa">Ver ubicación</a>
-            </article>
-            <article class="tarjeta-destino">
-                <img src="../Imagenes/Santuario_fauna_y_flora_los_flamencos.jpg" alt="Santuario de Fauna y Flora Los Flamencos">
-                <h3>Santuario de Fauna y Flora Los Flamencos</h3><p>Camarones, Riohacha</p>
-                <p>Un espacio natural de gran importancia por su biodiversidad.</p>
-                <a href="https://www.google.com/maps?q=11.371272479984055,-73.12104781356018" target="_blank" rel="noopener noreferrer" class="boton-mapa">Ver ubicación</a>
-            </article>
-            <article class="tarjeta-destino">
-                <img src="../Imagenes/Salinas_de_manaure.jpg" alt="Salinas de Manaure">
-                <h3>Salinas de Manaure</h3><p>Manaure, La Guajira</p>
-                <p>Un paisaje característico de la producción artesanal de sal.</p>
-                <a href="https://www.google.com/maps?q=11.763161389154261,-72.51912472050132" target="_blank" rel="noopener noreferrer" class="boton-mapa">Ver ubicación</a>
-            </article>
-            <article class="tarjeta-destino">
-                <img src="../Imagenes/Centro_historico_cartagena.jpg" alt="Centro Histórico de Cartagena">
-                <h3>Centro Histórico de Cartagena</h3><p>Cartagena de Indias, Bolívar</p>
-                <p>Un destino histórico reconocido por su arquitectura colonial.</p>
-                <a href="https://www.google.com/maps?q=10.424679969044202,-75.55196698756905" target="_blank" rel="noopener noreferrer" class="boton-mapa">Ver ubicación</a>
-            </article>
+        <p class="destinos-intro">
+            Conoce algunos de los lugares turísticos más interesantes de Colombia.
+        </p>
+
+        <div class="contenedor-destinos" id="contenedor-destinos">
+            <p>Cargando destinos turísticos...</p>
         </div>
     </section>
 
     <section class="mapas" id="mapas">
         <h2>Explora nuestros destinos en el mapa</h2>
         <p>Selecciona un destino para consultar su ubicación.</p>
+
         <div class="selector-destino">
-            <select id="destino-mapa">
-                <option value="Cabo de la Vela, La Guajira" data-lat="12.195810783645866" data-lon="-72.14721863564708" data-nombre="Cabo de la Vela">Cabo de la Vela</option>
-                <option value="Punta Gallinas, La Guajira" data-lat="12.45832211845142" data-lon="-71.66616741055893" data-nombre="Punta Gallinas">Punta Gallinas</option>
-                <option value="Santuario de Fauna y Flora Los Flamencos, Riohacha" data-lat="11.371272479984055" data-lon="-73.12104781356018" data-nombre="Santuario de Los Flamencos">Santuario de Los Flamencos</option>
-                <option value="Salinas de Manaure, La Guajira" data-lat="11.763161389154261" data-lon="-72.51912472050132" data-nombre="Salinas de Manaure">Salinas de Manaure</option>
-                <option value="Centro Histórico de Cartagena, Colombia" data-lat="10.424679969044202" data-lon="-75.55196698756905" data-nombre="Centro Histórico de Cartagena">Centro Histórico de Cartagena</option>
+            <select id="destino-mapa" disabled>
+                <option value="">Cargando destinos...</option>
             </select>
         </div>
+
         <div class="contenedor-mapa">
-            <iframe id="mapa-google" src="https://www.google.com/maps?q=Cabo+de+la+Vela,+La+Guajira&output=embed" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe
+                id="mapa-google"
+                src="https://www.google.com/maps?q=Cabo+de+la+Vela,+La+Guajira&output=embed"
+                width="100%"
+                height="450"
+                style="border:0;"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
     </section>
 
     <section class="clima" id="clima">
         <h2>Clima del destino</h2>
-        <p class="clima-intro" id="clima-destino">Selecciona un destino en el mapa para ver su clima.</p>
-        <p class="clima-estado" id="clima-estado" role="status" aria-live="polite"></p>
+
+        <p class="clima-intro" id="clima-destino">
+            Selecciona un destino en el mapa para ver su clima.
+        </p>
+
+        <p class="clima-estado" id="clima-estado"
+           role="status" aria-live="polite"></p>
+
         <div class="clima-hoy" id="clima-hoy" hidden>
-            <div class="clima-principal"><div class="clima-icono" id="clima-icono"></div><div class="clima-temp" id="clima-temp"></div><div class="clima-cond" id="clima-cond"></div></div>
+            <div class="clima-principal">
+                <div class="clima-icono" id="clima-icono"></div>
+                <div class="clima-temp" id="clima-temp"></div>
+                <div class="clima-cond" id="clima-cond"></div>
+            </div>
+
             <ul class="clima-detalles">
                 <li>Sensación térmica: <strong id="clima-sens"></strong></li>
                 <li>Humedad: <strong id="clima-hum"></strong></li>
                 <li>Viento: <strong id="clima-viento"></strong></li>
             </ul>
         </div>
-        <h3 class="clima-subtitulo" id="clima-subtitulo" hidden>Próximos días</h3>
+
+        <h3 class="clima-subtitulo" id="clima-subtitulo" hidden>
+            Próximos días
+        </h3>
+
         <div class="clima-dias" id="clima-dias"></div>
+
         <p class="clima-fuente">Datos: Open-Meteo. Hora de Colombia.</p>
     </section>
 
     <section class="chatbot" id="asistente">
         <h2>Asistente turístico</h2>
-        <p class="chatbot-intro">Haz preguntas sobre los cinco destinos registrados en ExploraGuajira.</p>
+
+        <p class="chatbot-intro">
+            Haz preguntas sobre los destinos registrados en ExploraGuajira.
+        </p>
+
         <div class="panel-chat">
-            <div class="mensajes-chat" id="mensajes-chat" role="log" aria-live="polite">
-                <div class="mensaje-chat mensaje-asistente">¡Hola! Puedo ayudarte a conocer Cabo de la Vela, Punta Gallinas, el Santuario Los Flamencos, las Salinas de Manaure y el Centro Histórico de Cartagena. Menciona el destino en tu pregunta.</div>
+            <div class="mensajes-chat" id="mensajes-chat"
+                 role="log" aria-live="polite">
+                <div class="mensaje-chat mensaje-asistente">
+                    ¡Hola! Soy el asistente turístico de ExploraGuajira.
+                    Pregúntame sobre nuestros destinos turísticos.
+                </div>
             </div>
+
             <form class="formulario-chat" id="formulario-chat">
-                <input id="pregunta-chat" type="text" maxlength="1000" placeholder="Escribe tu pregunta..." autocomplete="off" required>
-                <button id="enviar-chat" type="submit">Enviar</button>
+                <input
+                    id="pregunta-chat"
+                    type="text"
+                    maxlength="1000"
+                    placeholder="Escribe tu pregunta..."
+                    autocomplete="off"
+                    required>
+
+                <button id="enviar-chat" type="submit">
+                    Enviar
+                </button>
             </form>
         </div>
     </section>
 </main>
+
 <script src="script.js"></script>
 <script src="chatbot.js"></script>
 </body>

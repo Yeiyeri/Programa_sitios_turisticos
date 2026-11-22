@@ -1,0 +1,57 @@
+[
+  {
+    "id": "cabo-de-la-vela",
+    "nombre": "Cabo de la Vela",
+    "tipo": "Playa y desierto",
+    "ubicacion": "Uribia, La Guajira",
+    "descripcion": "Destino turístico de La Guajira conocido por sus paisajes desérticos, playas y riqueza cultural.",
+    "latitud": 12.195810783645866,
+    "longitud": -72.14721863564708,
+    "imagen": "cabo_de_la_vela.jpg",
+    "alias": ["cabo de la vela", "cabo", "el cabo de la vela"]
+  },
+  {
+    "id": "punta-gallinas",
+    "nombre": "Punta Gallinas",
+    "tipo": "Paisaje natural",
+    "ubicacion": "Alta Guajira, La Guajira",
+    "descripcion": "Destino de la Alta Guajira reconocido por sus paisajes naturales y su entorno desértico.",
+    "latitud": 12.45832211845142,
+    "longitud": -71.66616741055893,
+    "imagen": "punta_gallinas.jpg",
+    "alias": ["punta gallinas", "punta gallina"]
+  },
+  {
+    "id": "santuario-los-flamencos",
+    "nombre": "Santuario de Fauna y Flora Los Flamencos",
+    "tipo": "Santuario natural",
+    "ubicacion": "Camarones, Riohacha, La Guajira",
+    "descripcion": "Área natural protegida reconocida por su biodiversidad y por ser hábitat de flamencos.",
+    "latitud": 11.371272479984055,
+    "longitud": -73.12104781356018,
+    "imagen": "Santuario_fauna_y_flora_los_flamencos.jpg",
+    "alias": ["santuario los flamencos", "los flamencos", "flamencos"]
+  },
+  {
+    "id": "salinas-de-manaure",
+    "nombre": "Salinas de Manaure",
+    "tipo": "Paisaje cultural",
+    "ubicacion": "Manaure, La Guajira",
+    "descripcion": "Lugar conocido por sus extensas salinas y la actividad tradicional de producción de sal.",
+    "latitud": 11.763161389154261,
+    "longitud": -72.51912472050132,
+    "imagen": "Salinas_de_manaure.jpg",
+    "alias": ["salinas de manaure", "manaure", "salina de manaure"]
+  },
+  {
+    "id": "centro-historico-cartagena",
+    "nombre": "Centro Histórico de Cartagena",
+    "tipo": "Patrimonio histórico",
+    "ubicacion": "Cartagena de Indias, Bolívar",
+    "descripcion": "Zona histórica reconocida por su arquitectura colonial, calles y plazas tradicionales.",
+    "latitud": 10.424679969044202,
+    "longitud": -75.55196698756905,
+    "imagen": "Centro_historico_cartagena.jpg",
+    "alias": ["centro historico de cartagena", "cartagena", "centro de cartagena"]
+  }
+]
